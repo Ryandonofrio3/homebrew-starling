@@ -1,22 +1,30 @@
 cask "starling" do
   version "0.1.0-alpha"
-  sha256 "5f20c379c5a9d61dfaeef042fdb6509502b0e32a84ce6027f1e26c247bb34c52"
+  sha256 "0aa7e2ef1a5ef2a214f347522c74a0e46dacb15bcff986da1afdb38e1593c0be"
 
   url "https://github.com/Ryandonofrio3/Starling/releases/download/v#{version}/Starling-v#{version}.zip"
   name "Starling"
   desc "Local voice-to-text transcription with auto-paste"
   homepage "https://github.com/Ryandonofrio3/Starling"
 
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
+
+  # Require macOS 14.1+ (matches your app's minimum version)
   depends_on macos: ">= :sonoma"
 
   app "Starling.app"
 
   postflight do
+    # Remove quarantine to prevent translocation and permission issues
     system_command "/usr/bin/xattr",
                    args: ["-dr", "com.apple.quarantine", "#{appdir}/Starling.app"],
                    sudo: false
   end
 
+  # Provide helpful installation notes
   caveats <<~EOS
     Starling requires two permissions to function:
 
@@ -42,3 +50,4 @@ cask "starling" do
     "~/Library/Preferences/com.starling.app.plist",
   ]
 end
+
